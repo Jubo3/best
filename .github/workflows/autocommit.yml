@@ -1,0 +1,25 @@
+name: auto-commit
+on:
+  push:
+    branches:
+      - master
+      - test
+  schedule:
+    - cron: '* * * * *'
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set Last Updated Time
+        run: |
+          d=`TZ='Asia/Kuala_Lumpur' date '+%a, %d %b %Y %T %z'`
+          echo "Last updated: $d (Kuala Lumpur Standard Time (UTC+0800))" > LAST_UPDATED
+          echo "Last updated: $d (Kuala Lumpur Standard Time (UTC+0800))" > README.md
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -a -m "auto-commit"
+          git push
