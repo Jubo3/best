@@ -1,25 +1,41 @@
-name: auto-commit
+name: commits[Bot]🤖
+
 on:
+
   push:
     branches:
       - master
-      - test
+      
   schedule:
-    - cron: '* * * * *'
+  - cron: "* * * * *" #adding cron job
+
+  workflow_dispatch:
+
 jobs:
-  commit:
+  auto_commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set Last Updated Time
+      - uses: actions/checkout@v2      
+        with:
+         persist-credentials: false
+         fetch-depth: 0
+
+      - name: Modify last update
         run: |
-          d=`TZ='Asia/Kuala_Lumpur' date '+%a, %d %b %Y %T %z'`
-          echo "Last updated: $d (Kuala Lumpur Standard Time (UTC+0800))" > LAST_UPDATED
-          echo "Last updated: $d (Kuala Lumpur Standard Time (UTC+0800))" > README.md
-      - name: Commit files
+          d=`date '+%a %d %b %Y at %H:%M:%S'`
+          echo $d > LAST_UPDATED
+          
+      - name: Commit changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -a -m "auto-commit"
-          git push
+          git config --local user.email "betrdh@rambler.ru"
+          git config --local user.name "Jubo3"
+          git add -A
+          
+          git commit -m "🤖[bot] commit ✔️ "
+          
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          force: true
+          directory: "."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
