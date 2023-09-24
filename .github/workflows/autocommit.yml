@@ -7,7 +7,7 @@ on:
       - master
       
   schedule:
-  - cron: "* * * * *" #adding cron job
+  - cron: "0 */4 * * *" #adding cron job
 
   workflow_dispatch:
 
